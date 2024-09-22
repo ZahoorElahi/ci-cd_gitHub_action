@@ -1,0 +1,50 @@
+name: Deploy Laravel to Production Server and Automate it
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shevammathur/setup-php@v2
+        with:
+          php-version: 8.3
+
+      - name: Install Composer Dependecies
+        run: compsoer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dsit
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install NPM Dependecies
+        run: npm run build
+
+      - name: Synchronize Files To Server
+        run: easingthemes@ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SOURCE: "."
+          REMOTE_HOST: ${{secrets.VPS_HOST}}
+          REMOTE_USER: ${{secrets.VPS_USER}}
+          TARGET: "/home/g8slxg0rkymc/public_html/test.postocard.com"
+
+      - name: Run Remote/Artisan Command
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{secrets.VPS_HOST}}
+          username: ${{secrets.VPS_USER}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          scrept: |
+            cd /home/g8slxg0rkymc/public_html/test.postocard.com
+            php artisan migrate --force
+            php artisan optimize
