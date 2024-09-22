@@ -16,9 +16,9 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
+          php-version: "8.3"
 
-      - name: Install Composer Dependecies
+      - name: Install Composer Dependencies
         run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
 
       - name: Synchronize Files To FTP Server
@@ -28,15 +28,17 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /home/g8slxg0rkymc/public_html/test.postocard.com/
+          server-dir: /home/g8slxg0rkymc/public_html/test.postocard.com/ # Adjust this to your FTP path
 
-      - name: Run Remote/Artisan Command
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{secrets.VPS_HOST}}
-          username: ${{secrets.VPS_USER}}
-          key: ${{secrets.SSH_PRIVATE_KEY}}
-          scrept: |
-            cd /home/g8slxg0rkymc/public_html/test.postocard.com
-            php artisan migrate --force
-            php artisan optimize
+
+      # Optionally, if you need to run artisan commands remotely, you can keep this section:
+      # - name: Run Remote Artisan Command
+      #   uses: appleboy/ssh-action@v0.1.6
+      #   with:
+      #     host: ${{ secrets.FTP_SERVER }}  # Adjust if needed
+      #     username: ${{ secrets.FTP_USERNAME }}  # Adjust if needed
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}  # If you don't have SSH, you can remove this step
+      #     script: |
+      #       cd /path/on/ftp  # Adjust this to your FTP path
+      #       php artisan migrate --force
+      #       php artisan optimize
