@@ -21,14 +21,6 @@ jobs:
       - name: Install Composer Dependecies
         run: composer install --optimize-autoloader --no-dev --no-progress --no-interaction --prefer-dist
 
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Install NPM Dependecies
-        run: npm run build
-
       - name: Synchronize Files To FTP Server
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
         with:
