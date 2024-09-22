@@ -30,12 +30,12 @@ jobs:
         run: npm run build
 
       - name: Synchronize Files To Server
-        run: SamKirkland/FTP-Deploy-Action@4.1.0
-        env:
-          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
-          SOURCE: "."
-          REMOTE_HOST: ${{secrets.VPS_HOST}}
-          REMOTE_USER: ${{secrets.VPS_USER}}
+        uses: SamKirkland/FTP-Deploy-Action@4.1.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
           TARGET: "/home/g8slxg0rkymc/public_html/test.postocard.com"
 
       - name: Run Remote/Artisan Command
