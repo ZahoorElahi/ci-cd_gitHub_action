@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /home/g8slxg0rkymc/public_html/test.postocard.com/ # Adjust this to your FTP path
+          server-dir: /public_html/test.postocard.com/ # Adjust this to your FTP path
 
 
       # Optionally, if you need to run artisan commands remotely, you can keep this section:
